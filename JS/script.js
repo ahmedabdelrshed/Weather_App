@@ -12,13 +12,18 @@ let default_city = "Cairo";
 
 async function getWeather() {
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${default_city}&appid=b5ce9b03014df6d4e59c0ba06ee44d08&units=metric`;
-  let response = await fetch(apiUrl);
-  if (!response.ok) {
+  try {
+    let response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok.");
+    } else {
+      messageError.style.display = "none";
+      weatherData = await response.json();
+      UpdateData();
+    }
+  } catch (error) {
     messageError.style.display = "block";
-  } else {
-    messageError.style.display = "none";
-    weatherData = await response.json();
-    UpdateData();
   }
 }
 
@@ -28,6 +33,7 @@ btnSearch.addEventListener("click", () => {
   if (inputSearch.value.trim() != "") {
     default_city = inputSearch.value;
     getWeather();
+    inputSearch.value = "";
   }
 });
 
@@ -37,7 +43,6 @@ function UpdateData() {
   humidity.innerHTML = Math.round(weatherData.main.humidity);
   wind.innerHTML = Math.round(weatherData.wind.speed);
   let status = weatherData.weather[0].main;
-  console.log(status);
   switch (status) {
     case "Clear":
       weatherImg.src = "images/clear.png";
