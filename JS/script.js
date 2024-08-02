@@ -14,7 +14,6 @@ async function getWeather() {
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${default_city}&appid=b5ce9b03014df6d4e59c0ba06ee44d08&units=metric`;
   try {
     let response = await fetch(apiUrl);
-
     if (!response.ok) {
       throw new Error("Network response was not ok.");
     } else {
@@ -31,7 +30,7 @@ getWeather();
 
 btnSearch.addEventListener("click", () => {
   if (inputSearch.value.trim() != "") {
-    default_city = inputSearch.value;
+    default_city = inputSearch.value.trim();
     getWeather();
     inputSearch.value = "";
   }
